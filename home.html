@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Air & Weather Predictor - Home</title>
+<style>
+body { 
+  font-family:'Segoe UI'; 
+  margin:0; padding:0; 
+  background: linear-gradient(135deg,#74ebd5,#ACB6E5); 
+  display:flex; justify-content:center; align-items:center; 
+  min-height:100vh; 
+}
+body {
+  font-family:'Segoe UI';
+  margin:0; 
+  padding:20px;
+  background: url("air poloution.jpg") no-repeat center center fixed;  
+  background-size: cover;  /* makes the image fit the screen */
+  color:#333;
+}
+.container { 
+  background: rgba(255,255,255,0.15); 
+  backdrop-filter: blur(10px); 
+  padding: 30px; 
+  border-radius: 20px; 
+  width:90%; max-width:500px; 
+  color:#fff; 
+  text-align:center; 
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+h1 { margin-bottom:20px; font-size:28px; }
+input, button { 
+  padding:12px; margin:8px 0; 
+  border-radius:8px; 
+  border:none; outline:none; 
+  width:100%; font-size:16px;
+}
+input { background:rgba(255,255,255,0.8); }
+button { 
+  background:#ff6a00; 
+  color:#fff; 
+  cursor:pointer; 
+  transition:0.3s; 
+}
+button:hover { background:#ff9900; }
+
+/* Location button (smaller, round) */
+.location-btn {
+  position: fixed;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  background: #0077ff;
+  border: none;
+  border-radius: 50%;
+  width: 60px;      /* fixed size */
+  height: 60px;     /* fixed size */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+  font-size: 18px;  /* smaller icon */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+.location-btn:hover {
+  background: #3399ff;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🌍 AI Air Pollution Predictor</h1>
+  <p>Enter your location details:</p>
+  
+  <input type="text" id="state" placeholder="Enter your State">
+  <input type="text" id="district" placeholder="Enter your District">
+  <input type="text" id="taluk" placeholder="Enter your Taluk">
+  
+  <button onclick="saveUser()">Continue →</button>
+</div>
+
+<!-- Location Button -->
+<button class="location-btn" onclick="goLocation()">📍</button>
+
+<script>
+function saveUser(){
+  const state = document.getElementById("state").value.trim();
+  const district = document.getElementById("district").value.trim();
+  const taluk = document.getElementById("taluk").value.trim();
+
+  if(!state){ alert("Please enter your State"); return; }
+  if(!district){ alert("Please enter your District"); return; }
+  if(!taluk){ alert("Please enter your Taluk"); return; }
+
+  localStorage.setItem("userState", state);
+  localStorage.setItem("userDistrict", district);
+  localStorage.setItem("userTaluk", taluk);
+
+  // Redirect to predictor page
+  window.location.href = "predictor.html";
+}
+
+function goLocation(){
+  // Redirect when location button is clicked
+  window.location.href = "live.html";
+}
+</script>
+
+</body>
+</html>

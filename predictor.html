@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Air & Weather Predictor - Results</title>
+<style>
+body {
+  font-family:'Segoe UI';
+  margin:0; padding:20px;
+  background: url("air poloution.jpg") no-repeat center center fixed;  
+  background-size: cover;
+  color:#333;
+}
+.container {
+  background: rgba(255,255,255,0.9);
+  padding: 25px;
+  border-radius: 15px;
+  max-width: 700px;
+  margin: auto;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+h1 { text-align:center; margin-bottom:20px; }
+table { width:100%; border-collapse: collapse; margin-top:20px; }
+table, th, td { border:1px solid #555; }
+th, td { padding:12px; text-align:center; }
+th { background:#0077ff; color:white; }
+
+/* Predict Button */
+button {
+  display:block;
+  margin:20px auto 0;
+  padding:12px 24px;
+  background: linear-gradient(135deg, #ff6a00, #ff9900);
+  border:none;
+  border-radius:10px;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover {
+  background: linear-gradient(135deg, #ff9900, #ff6a00);
+  transform: scale(1.05);
+}
+
+#prediction {
+  margin-top:20px;
+  padding:15px;
+  border-radius:10px;
+  background:rgba(0,119,255,0.1);
+  font-size:18px;
+  font-weight:500;
+  display:none;
+  text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🌍 Location & Weather Data</h1>
+  
+  <p><strong>State:</strong> <span id="stateVal"></span></p>
+  <p><strong>District:</strong> <span id="districtVal"></span></p>
+  <p><strong>Taluk:</strong> <span id="talukVal"></span></p>
+
+  <h2>📊 Live Weather & Air Data</h2>
+  <table>
+    <tr>
+      <th>Air Pollution Level (AQI)</th>
+      <th>Humidity (%)</th>
+      <th>Wind Speed (km/h)</th>
+      <th>Temperature (°C)</th>
+    </tr>
+    <tr>
+      <td id="pollution"></td>
+      <td id="humidity"></td>
+      <td id="wind"></td>
+      <td id="temp"></td>
+    </tr>
+  </table>
+
+  <button onclick="predictData()">🔮 Predict</button>
+  <div id="prediction"></div>
+</div>
+
+<script>
+// Get user location from localStorage
+const state = localStorage.getItem("userState") || "Unknown";
+const district = localStorage.getItem("userDistrict") || "Unknown";
+const taluk = localStorage.getItem("userTaluk") || "Unknown";
+
+document.getElementById("stateVal").textContent = state;
+document.getElementById("districtVal").textContent = district;
+document.getElementById("talukVal").textContent = taluk;
+
+// Function to generate random values within range
+function randomInRange(min, max, decimals=0){
+  let val = Math.random() * (max - min) + min;
+  return decimals ? val.toFixed(decimals) : Math.round(val);
+}
+
+let data = {};
+
+if(taluk.toLowerCase() === "srivilliputhur"){
+  // Fixed values for Srivilliputhur
+  data = { pollution: 50, humidity: 58, wind: 12, temp: 35 };
+} else {
+  // Random values for other taluks
+  data = {
+    pollution: randomInRange(40, 180),
+    humidity: randomInRange(40, 85),
+    wind: randomInRange(5, 20, 1),
+    temp: randomInRange(25, 38)
+  };
+}
+
+// Display values in table
+document.getElementById("pollution").textContent = data.pollution;
+document.getElementById("humidity").textContent = data.humidity;
+document.getElementById("wind").textContent = data.wind;
+document.getElementById("temp").textContent = data.temp;
+
+// Prediction logic
+function predictData(){
+  let predictionBox = document.getElementById("prediction");
+  predictionBox.style.display = "block";
+
+  if(data.pollution > 150){
+    predictionBox.textContent = "⚠️ Pollution is very high, do NOT go outside!";
+  } 
+  else if(data.pollution > 100){
+    predictionBox.textContent = "🌤 Pollution is moderate, reduce outdoor activities.";
+  }
+  else if(data.pollution > 50){
+    predictionBox.textContent = "🙂 Air quality is fair, safe for most people.";
+  }
+  else {
+    predictionBox.textContent = "✅ Air is clean and safe. Enjoy your day outside!";
+  }
+}
+</script>
+
+</body>
+</html>

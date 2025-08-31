@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Air & Weather Predictor</title>
+<style>
+body {
+  font-family:'Segoe UI';
+  margin:0; padding:20px;
+  background: url("air poloution.jpg") no-repeat center center fixed;  
+  background-size: cover;  
+  color:#333;
+  text-align:center;
+}
+.container {
+  background: rgba(255,255,255,0.9);
+  padding: 25px;
+  border-radius: 15px;
+  max-width: 500px;
+  margin: auto;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+button {
+  margin-top:20px;
+  padding:12px 24px;
+  background: linear-gradient(135deg, #0077ff, #00c6ff);
+  border:none;
+  border-radius:10px;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover {
+  background: linear-gradient(135deg, #00c6ff, #0077ff);
+  transform: scale(1.05);
+}
+#dateTime {
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #222;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🌍 AI Air Pollution Predictor</h1>
+  <p>Click the button below to scan your live location.</p>
+  <button onclick="getLocation()">📡 Scan Location</button>
+  <div id="dateTime"></div>
+</div>
+
+<script>
+// Live Date & Time
+function updateDateTime() {
+  const now = new Date();
+  const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+  const formatted = now.toLocaleDateString(undefined, options) + ' ' + now.toLocaleTimeString();
+  document.getElementById('dateTime').textContent = formatted;
+}
+setInterval(updateDateTime, 1000); // update every second
+updateDateTime(); // initial call
+
+// Location scanning
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(success, error);
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+
+function success(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  // Reverse geocoding using Nominatim API
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
+    .then(response => response.json())
+    .then(data => {
+      let state = data.address.state || "Unknown";
+      let district = data.address.county || data.address.state_district || "Unknown";
+      let taluk = data.address.city || data.address.town || data.address.village || "Unknown";
+
+      // Save to localStorage
+      localStorage.setItem("userState", state);
+      localStorage.setItem("userDistrict", district);
+      localStorage.setItem("userTaluk", taluk);
+      localStorage.setItem("scanTime", new Date().toISOString()); // store scan timestamp
+
+      // Redirect to results page
+      window.location.href = "results.html";
+    })
+    .catch(err => {
+      alert("Failed to get location details.");
+    });
+}
+
+function error() {
+  alert("Unable to retrieve your location.");
+}
+</script>
+
+</body>
+</html>
